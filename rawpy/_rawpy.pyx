@@ -68,6 +68,7 @@ cdef extern from "libraw.h":
         ushort      curve[0x10000] # 65536
         unsigned    cblack[4102]
         unsigned    black
+        unsigned    maximum
         float       cmatrix[3][4]
         float       cam_xyz[4][3]
         void        *profile # a string?
@@ -664,6 +665,26 @@ cdef class RawPy:
                     bl.cblack[1],
                     bl.cblack[2],
                     bl.cblack[3]]
+
+    property black_level:
+        """
+        Black level
+        
+        :rtype: int
+        """
+        def __get__(self):
+            cdef unsigned black = self.p.imgdata.rawdata.color.black
+            return black
+
+    property white_level:
+        """
+        Maximum pixel value
+        
+        :rtype: int
+        """
+        def __get__(self):
+            cdef unsigned maximum = self.p.imgdata.rawdata.color.maximum
+            return maximum
 
     property color_matrix:
         """
